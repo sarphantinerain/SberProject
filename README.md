@@ -42,7 +42,7 @@ Set-Location .\games
 
 История хранится отдельно для каждого workspace в SQLite вне доступной агенту файловой области. По умолчанию `HISTORY_TURNS=10` сохраняет десять пар вопрос–ответ; значение `0` отключает чтение и запись истории. Папка `.agent-memory` и секреты в `.env` исключены из Git.
 
-Основные настройки находятся в `.env`: ключ `DEEPSEEK_API_KEY`, лимит шагов `AGENT_MAX_STEPS`, таймауты модели и инструментов, `AGENT_LOG_EVENTS` и `HISTORY_TURNS`. Их безопасный шаблон — [.env.example](.env.example).
+Основные настройки находятся в `.env`: ключ `DEEPSEEK_API_KEY`, лимит шагов `AGENT_MAX_STEPS`, максимум токенов ответа `AGENT_MAX_OUTPUT_TOKENS` (по умолчанию 200000), время ожидания модели `AGENT_MODEL_TIMEOUT` (по умолчанию 1800 секунд) и таймаут инструмента, `AGENT_LOG_EVENTS` и `HISTORY_TURNS`. Их безопасный шаблон — [.env.example](.env.example).
 
 ## Игры
 

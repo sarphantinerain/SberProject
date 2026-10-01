@@ -17,8 +17,10 @@ class DeepSeekModel:
         if config is not None:
             watchdog = config.max_steps * 2   # запас поверх max_steps
             self.model_timeout_default = config.model_timeout
+            self.max_output_tokens = config.max_output_tokens
         else:
-            self.model_timeout_default = 20.0
+            self.model_timeout_default = 1800.0
+            self.max_output_tokens = 200000
         if type(watchdog) is not int or watchdog < 1:
             raise ValueError("watchdog должен быть положительным целым")
         if client is None:
@@ -33,7 +35,7 @@ class DeepSeekModel:
             client = OpenAI(
                 api_key=api_key,
                 base_url="https://api.deepseek.com",
-                timeout=20.0,
+                timeout=1800.0,
                 max_retries=0,
             )
         self.client = client
@@ -54,7 +56,7 @@ class DeepSeekModel:
             messages=messages,
             tools=tools,
             stream=False,
-            max_tokens=1024,
+            max_tokens=self.max_output_tokens,
             timeout=request_timeout,
             extra_body={"thinking": {"type": "disabled"}},
         )

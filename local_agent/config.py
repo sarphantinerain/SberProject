@@ -11,7 +11,8 @@ DEFAULT_TOOLS = ("add", "divide", "multiply", "subtraction", "read_file",
 @dataclass
 class Config:
     max_steps: int = 8
-    model_timeout: float = 20.0
+    max_output_tokens: int = 200000
+    model_timeout: float = 1800.0
     tool_timeout: float = 5.0
     allowed_tools: tuple = DEFAULT_TOOLS
     workspace: Workspace = field(default_factory=Workspace.from_cwd)
@@ -22,6 +23,8 @@ class Config:
         import math
         if type(self.max_steps) is not int or self.max_steps < 1:
             raise ValueError("max_steps должен быть положительным целым")
+        if type(self.max_output_tokens) is not int or not 1 <= self.max_output_tokens <= 200000:
+            raise ValueError("AGENT_MAX_OUTPUT_TOKENS должен быть целым числом от 1 до 200000")
         for value in (self.model_timeout, self.tool_timeout):
             if not math.isfinite(value) or value <= 0:
                 raise ValueError("Таймауты должны быть положительными конечными числами")
@@ -37,7 +40,8 @@ class Config:
         tools = os.getenv("AGENT_ALLOWED_TOOLS")
         return cls(
             max_steps=int(os.getenv("AGENT_MAX_STEPS", "8")),
-            model_timeout=float(os.getenv("AGENT_MODEL_TIMEOUT", "20")),
+            max_output_tokens=int(os.getenv("AGENT_MAX_OUTPUT_TOKENS", "200000")),
+            model_timeout=float(os.getenv("AGENT_MODEL_TIMEOUT", "1800")),
             tool_timeout=float(os.getenv("AGENT_TOOL_TIMEOUT", "5")),
             allowed_tools=tuple(t.strip() for t in tools.split(",") if t.strip())
             if tools is not None else DEFAULT_TOOLS,
