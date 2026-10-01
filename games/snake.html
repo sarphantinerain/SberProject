@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1022">
+<meta name="description" content="Классическая змейка в новом аркадном оформлении. Три скорости, рекорды и управление с телефона.">
+<title>Змейка — Аркадный клуб</title>
+<style>
+:root{--bg:#0b1022;--panel:#131b33;--panel-2:#182342;--line:#334267;--ink:#f6f7ff;--muted:#a7b4d4;--acid:#c8ff5d;--pink:#ff74a6;--cyan:#77e9e3}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",Arial,sans-serif}body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 85% 15%,#362252 0,transparent 27%),radial-gradient(circle at 0 90%,#15314c 0,transparent 30%),linear-gradient(#ffffff04 1px,transparent 1px),linear-gradient(90deg,#ffffff04 1px,transparent 1px);background-size:auto,auto,34px 34px,34px 34px}button{font:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,canvas:focus-visible{outline:3px solid var(--cyan);outline-offset:4px}[hidden]{display:none!important}
+.shell{width:min(1360px,calc(100% - 64px));margin:auto}.topbar{height:90px;border-bottom:1px solid #ffffff24;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:20px;letter-spacing:-1px;text-transform:uppercase}.brand-mark{width:32px;height:32px;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;transform:rotate(-8deg)}.brand-mark i{background:var(--acid);border-radius:2px}.brand-mark i:nth-child(2),.brand-mark i:nth-child(8),.brand-mark i:nth-child(9){opacity:.25}.brand b{color:var(--acid)}.topbar nav{display:flex;gap:12px;align-items:center}.topbar nav a,.topbar nav button{border:1px solid var(--line);border-radius:99px;background:#17213b;color:var(--ink);padding:9px 15px;font-size:12px}.topbar nav a:hover,.topbar nav button:hover{border-color:var(--cyan)}.live{font:11px Consolas,monospace;color:var(--acid);letter-spacing:1.5px;margin-right:13px}.live:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acid);box-shadow:0 0 12px var(--acid);margin-right:9px}
+.layout{display:grid;grid-template-columns:minmax(300px,.78fr) minmax(0,1fr);gap:clamp(30px,5vw,88px);align-items:center;padding:50px 0 70px}.intro{align-self:stretch;display:flex;flex-direction:column;justify-content:center}.eyebrow{font:700 11px Consolas,monospace;letter-spacing:3px;color:var(--cyan);text-transform:uppercase}.eyebrow:before{content:"[ ";color:var(--pink)}.eyebrow:after{content:" ]";color:var(--pink)}h1{font-size:clamp(78px,9.6vw,142px);line-height:.82;letter-spacing:-9px;margin:32px 0 30px;font-weight:950;text-transform:uppercase}h1 span{display:block;color:var(--acid);text-shadow:8px 8px 0 #234941}h1 small{display:block;margin:22px 0 0;color:var(--pink);font:700 clamp(16px,2vw,23px)/1.2 Consolas,monospace;letter-spacing:6px;text-shadow:none}.lede{font-size:16px;color:var(--muted);max-width:390px;line-height:1.75;margin:0 0 43px}.selector{border-top:1px solid var(--line);padding-top:25px;max-width:430px}.section-label{font:11px Consolas,monospace;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:13px}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mode{min-height:70px;border:1px solid var(--line);background:#14203a;color:var(--muted);border-radius:12px;font-size:12px;font-weight:700;padding:10px}.mode[aria-pressed=true]{background:var(--acid);border-color:var(--acid);color:#172329;box-shadow:0 8px 23px #c8ff5d2e}.mode:hover:not(:disabled){border-color:var(--acid)}.tempo-note{font:11px Consolas,monospace;color:var(--muted);margin:13px 0 0}.howto{display:flex;align-items:center;gap:16px;margin-top:38px}.keycaps{display:grid;grid-template-columns:repeat(3,29px);gap:4px;flex:none}.keycaps kbd{height:28px;border:1px solid #587197;border-bottom-width:3px;border-radius:5px;display:grid;place-items:center;color:var(--ink);font:12px Consolas,monospace}.keycaps kbd:first-child{grid-column:2}.keycaps kbd:nth-child(2){grid-column:1}.howto p{font-size:12px;color:var(--muted);line-height:1.8;margin:0}.howto strong{color:var(--ink)}
+.game-area{min-width:0}.game-top{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px}.scores{display:flex;gap:12px}.score{min-width:112px;padding:10px 14px 8px;background:#192441;border:1px solid var(--line);border-radius:11px}.score span{display:block;font:10px Consolas,monospace;letter-spacing:2px;color:var(--muted)}.score strong{display:block;font:700 30px Consolas,monospace;color:var(--ink);line-height:1.2}.score.best strong{color:var(--acid)}.mode-tag{font:11px Consolas,monospace;letter-spacing:1px;color:var(--cyan);text-transform:uppercase}.board-shell{position:relative;padding:12px;border:1px solid #6074a3;border-radius:25px;background:#1b2847;box-shadow:0 30px 90px #020614b3,0 0 0 6px #101933;transition:border-color .2s}.board-shell[data-phase=running]{border-color:var(--acid)}canvas{display:block;width:100%;height:auto;border-radius:15px;background:#101a31;touch-action:none}.overlay{position:absolute;inset:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;border-radius:15px;background:#101a31ee;backdrop-filter:blur(6px)}.overlay-icon{width:74px;height:74px;display:grid;place-items:center;border:2px solid var(--acid);border-radius:18px;box-shadow:0 0 35px #c8ff5d38;transform:rotate(-8deg);color:var(--acid);font:42px Consolas,monospace;margin-bottom:22px}.overlay h2{font-size:clamp(23px,3vw,34px);line-height:1.12;letter-spacing:-1px;margin:0 0 10px}.overlay p{font-size:13px;color:var(--muted);max-width:290px;margin:0 0 24px}.primary{display:inline-flex;align-items:center;justify-content:center;gap:20px;min-width:175px;padding:14px 22px;border:0;border-radius:11px;background:var(--acid);color:#162328;font-weight:800;box-shadow:0 12px 24px #c8ff5d33}.primary:hover{background:#dbff93;transform:translateY(-2px)}.overlay small{font:10px Consolas,monospace;letter-spacing:2px;color:var(--muted);margin-top:17px}.game-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}.round-status{font:12px Consolas,monospace;color:var(--muted)}.round-status:before{content:"●";color:var(--acid);margin-right:9px}.buttons{display:flex;gap:8px}.secondary{border:1px solid var(--line);border-radius:9px;background:#1a2643;color:var(--ink);padding:9px 13px;font-size:12px}.secondary:hover:not(:disabled){border-color:var(--cyan)}.mobile-pad{display:none;grid-template-columns:repeat(3,50px);gap:6px;justify-content:center;margin-top:25px}.mobile-pad button{height:48px;border:1px solid #6a7daa;border-radius:10px;background:#1a2849;color:var(--acid);font-size:25px;touch-action:manipulation}.mobile-pad button:first-child{grid-column:2}.mobile-pad button:nth-child(2){grid-column:1}
+footer{border-top:1px solid #ffffff24;display:flex;justify-content:space-between;gap:20px;padding:22px 0 26px;color:var(--muted);font:10px Consolas,monospace;letter-spacing:1px}footer a{color:var(--cyan)}footer a:hover{text-decoration:underline}dialog{width:min(470px,calc(100% - 30px));padding:30px;background:#17223d;border:1px solid #7285a9;border-radius:20px;color:var(--ink)}dialog::backdrop{background:#050915c9;backdrop-filter:blur(6px)}dialog h2{font-size:28px;margin:0 0 14px}dialog p,dialog li{color:var(--muted);font-size:14px}dialog ul{padding-left:22px}dialog .primary{margin-top:17px;width:100%}
+@media(max-width:1020px){.layout{gap:30px}.shell{width:min(100% - 42px,1100px)}h1{font-size:clamp(70px,9vw,100px);letter-spacing:-6px}.mode{font-size:11px;padding:7px}}
+@media(max-width:760px){.topbar{height:72px}.live{display:none}.layout{grid-template-columns:1fr;padding:34px 0 55px}.intro{display:block}h1{font-size:clamp(65px,14vw,100px);margin:25px 0 23px}h1 span{display:inline-block;margin-left:10px}h1 small{margin-top:17px}.lede{margin-bottom:25px}.selector{max-width:none}.howto{display:none}.game-area{width:min(100%,570px);margin:auto}.mobile-pad{display:grid}.game-bottom{align-items:flex-start}.round-status{max-width:45%}}
+@media(max-width:490px){.shell{width:calc(100% - 30px)}.brand{font-size:17px}.topbar nav a{display:none}.topbar nav button{padding:8px 11px}.layout{gap:27px}.eyebrow{font-size:9px}h1{font-size:clamp(58px,15vw,75px);letter-spacing:-5px}h1 small{font-size:14px;letter-spacing:4px}.lede{font-size:14px}.modes{gap:5px}.mode{min-height:62px}.score{min-width:88px;padding:7px 9px}.score strong{font-size:24px}.mode-tag{display:none}.board-shell{padding:7px;border-radius:17px}.overlay{inset:7px;border-radius:10px}.overlay-icon{width:56px;height:56px;font-size:32px;margin-bottom:14px}.overlay h2{font-size:22px}.overlay p{font-size:12px;margin-bottom:17px}.overlay small{display:none}.game-bottom{margin-top:15px}.secondary{padding:7px 9px;font-size:11px}footer{font-size:9px;line-height:1.5}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+<a class="brand" href="snake.html" aria-label="Аркадный клуб, Змейка"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>КЛУБ <b>"СКАЛА"</b></a>
+<nav aria-label="Навигация"><span class="live">АРКАДА ОТКРЫТА</span><a href="bad-site.html">В оранжерею ↗</a><button id="rules-open">Правила ↗</button></nav>
+</header>
+<main class="layout">
+<section class="intro" aria-label="Об игре">
+<div class="eyebrow">Классика на новом экране</div>
+<h1>Змей<span>ка.</span><small>20 × 20 / БЕСКОНЕЧНЫЙ РАУНД</small></h1>
+<p class="lede">Собирайте точки, удлиняйте маршрут и находите выход там, где его почти не осталось.</p>
+<div class="selector"><div class="section-label" id="pace-label">01 / Выберите скорость</div><div class="modes" role="group" aria-labelledby="pace-label"><button class="mode" data-mode="slow" aria-pressed="false">Разминка</button><button class="mode" data-mode="normal" aria-pressed="true">Классика</button><button class="mode" data-mode="fast" aria-pressed="false">Турбо</button></div><p class="tempo-note">Режим можно сменить между раундами.</p></div>
+<div class="howto"><div class="keycaps" aria-hidden="true"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><p><strong>WASD / стрелки</strong> — поворот<br><strong>Пробел</strong> — пауза · <strong>Enter</strong> — старт</p></div>
+</section>
+<section class="game-area" aria-label="Игра Змейка">
+<div class="game-top"><div class="scores"><div class="score"><span>ОЧКИ</span><strong id="score">000</strong></div><div class="score best"><span>РЕКОРД</span><strong id="best">000</strong></div></div><span class="mode-tag" id="mode-label">Классика</span></div>
+<div class="board-shell" id="board-shell" data-phase="ready"><canvas id="board" width="800" height="800" tabindex="0" role="application" aria-label="Змейка. Управление: стрелки или WASD, пробел — пауза. На телефоне — свайпы или кнопки ниже.">Для игры нужен браузер с поддержкой canvas.</canvas>
+<div class="overlay" id="overlay"><div class="overlay-icon" id="overlay-icon" aria-hidden="true">↳</div><h2 id="overlay-title">Поймайте свой ритм</h2><p id="overlay-copy">Один поворот может изменить всё. Начнём с первого?</p><button class="primary" id="play"><span id="play-label">Начать игру</span><span aria-hidden="true">→</span></button><small id="overlay-hint">ИЛИ НАЖМИТЕ ENTER</small></div></div>
+<div class="game-bottom"><div class="round-status" id="status" role="status" aria-live="polite">Готовы к первому ходу</div><div class="buttons"><button class="secondary" id="pause" disabled>Пауза</button><button class="secondary" id="restart" disabled>Заново ↻</button></div></div>
+<div class="mobile-pad" role="group" aria-label="Направление движения"><button data-direction="up" aria-label="Вверх">↑</button><button data-direction="left" aria-label="Влево">←</button><button data-direction="down" aria-label="Вниз">↓</button><button data-direction="right" aria-label="Вправо">→</button></div>
+</section>
+</main>
+<footer><span>АРКАДА / НИКАКИХ УРОВНЕЙ, ТОЛЬКО ЕЩЁ ОДИН РАУНД</span><a href="bad-site.html">Заглянуть в оранжерею ↗</a></footer>
+</div>
+<dialog id="rules"><h2>Правила игры</h2><p>Собирайте розовые точки: каждая даёт одно очко и удлиняет змейку.</p><ul><li>Не врезайтесь в стены и собственный хвост.</li><li>Поворачивайте стрелками или WASD. На телефоне используйте свайпы или кнопки.</li><li>Пробел ставит игру на паузу. При уходе со страницы пауза включается сама.</li><li>Рекорд сохраняется отдельно для каждого темпа в этом браузере, если доступно локальное хранилище.</li></ul><button class="primary" id="rules-close">Понятно →</button></dialog>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const GRID = 20, CELL = 40;
+const canvas = $('board'), ctx = canvas.getContext('2d');
+const modes = {slow:{name:'Разминка',ms:210},normal:{name:'Классика',ms:145},fast:{name:'Турбо',ms:90}};
+const vectors = {up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
+let mode = 'normal', phase = 'ready', snake, direction, food, score = 0, turnQueued = false, lastTick = 0;
+let records = {slow:0,normal:0,fast:0};
+try { const saved = JSON.parse(localStorage.getItem('snake-club-records-v1') || '{}'); for (const key of Object.keys(records)) if (Number.isInteger(saved[key]) && saved[key] >= 0 && saved[key] <= 397) records[key] = saved[key]; } catch (_) {}
+const same = (a,b) => a.x === b.x && a.y === b.y;
+const pad = value => String(value).padStart(3,'0');
+function placeFood() {
+  const free = [];
+  for (let y=0;y<GRID;y++) for(let x=0;x<GRID;x++) if(!snake.some(p=>p.x===x&&p.y===y)) free.push({x,y});
+  return free.length ? free[Math.floor(Math.random()*free.length)] : null;
+}
+function rounded(x,y,w,h,r,color) { ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill(); }
+function draw() {
+  ctx.fillStyle='#101a31';ctx.fillRect(0,0,800,800);
+  ctx.strokeStyle='#263455';ctx.lineWidth=1;
+  for(let i=1;i<GRID;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,800);ctx.moveTo(0,i*CELL);ctx.lineTo(800,i*CELL);ctx.stroke();}
+  if(food){ctx.shadowColor='#ff74a6';ctx.shadowBlur=20;ctx.fillStyle='#ff74a6';ctx.beginPath();ctx.arc(food.x*CELL+20,food.y*CELL+20,11,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#ffd7e4';ctx.beginPath();ctx.arc(food.x*CELL+17,food.y*CELL+16,3,0,Math.PI*2);ctx.fill();}
+  snake.forEach((p,index)=>rounded(p.x*CELL+3,p.y*CELL+3,CELL-6,CELL-6,index===0?11:8,index===0?'#c8ff5d':'#77e9e3'));
+  const h=snake[0], cx=h.x*CELL+20,cy=h.y*CELL+20;
+  ctx.fillStyle='#17313a';
+  for(const side of [-1,1]){ctx.beginPath();ctx.arc(cx+direction.x*8+direction.y*side*7,cy+direction.y*8+direction.x*side*7,3.5,0,Math.PI*2);ctx.fill();}
+}
+function sync() {
+  $('score').textContent=pad(score);$('best').textContent=pad(records[mode]);$('mode-label').textContent=modes[mode].name;
+  $('board-shell').dataset.phase=phase;$('overlay').hidden=phase==='running';
+  $('pause').disabled=!['running','paused'].includes(phase);$('pause').textContent=phase==='paused'?'Продолжить':'Пауза';
+  $('restart').disabled=phase==='ready';
+  document.querySelectorAll('.mode').forEach(button=>{button.disabled=['running','paused'].includes(phase);button.setAttribute('aria-pressed',String(button.dataset.mode===mode));});
+  const content = {
+    ready:['↳','Поймайте свой ритм','Один поворот может изменить всё. Начнём с первого?','Начать игру','Готовы к первому ходу'],
+    paused:['Ⅱ','Никуда не спешим','Вдохните. Ваш следующий поворот подождёт.','Продолжить','Игра на паузе'],
+    over:['↻','Ещё один раунд?','Ваш счёт — '+score+'. Каждая попытка делает вас точнее.','Попробовать ещё','Раунд окончен · '+score+' очк.'],
+    won:['✦','Идеальный маршрут','Всё поле ваше. Вот это выдержка!','Сыграть снова','Победа! Поле заполнено']
+  };
+  if(content[phase]){const c=content[phase];$('overlay-icon').textContent=c[0];$('overlay-title').textContent=c[1];$('overlay-copy').textContent=c[2];$('play-label').textContent=c[3];$('status').textContent=c[4];$('overlay-hint').textContent=phase==='paused'?'ИЛИ НАЖМИТЕ ПРОБЕЛ':'ИЛИ НАЖМИТЕ ENTER';}
+  else $('status').textContent='В своём ритме';
+}
+function reset() {snake=[{x:9,y:10},{x:8,y:10},{x:7,y:10}];direction={x:1,y:0};score=0;turnQueued=false;food=placeFood();phase='ready';sync();draw();}
+function start() {reset();phase='running';lastTick=performance.now();sync();canvas.focus({preventScroll:true});}
+function pause() {if(!['running','paused'].includes(phase))return;phase=phase==='running'?'paused':'running';lastTick=performance.now();sync();if(phase==='running')canvas.focus({preventScroll:true});}
+function finish(won=false){phase=won?'won':'over';sync();draw();}
+function turn(next){if(phase!=='running'||turnQueued||same(next,direction)||(next.x===-direction.x&&next.y===-direction.y))return;direction=next;turnQueued=true;}
+function tick(){
+  const head={x:snake[0].x+direction.x,y:snake[0].y+direction.y};
+  const eating=food&&same(head,food),body=eating?snake:snake.slice(0,-1);
+  if(head.x<0||head.y<0||head.x>=GRID||head.y>=GRID||body.some(p=>same(p,head))){finish();return;}
+  snake.unshift(head);
+  if(eating){score++;if(score>records[mode]){records[mode]=score;try{localStorage.setItem('snake-club-records-v1',JSON.stringify(records));}catch(_){}}
+    $('score').textContent=pad(score);$('best').textContent=pad(records[mode]);food=placeFood();if(!food){finish(true);return;}}
+  else snake.pop();
+  turnQueued=false;draw();
+}
+function frame(now){if(phase==='running'&&now-lastTick>=modes[mode].ms){lastTick=now;tick();}requestAnimationFrame(frame);}
+$('play').addEventListener('click',()=>phase==='paused'?pause():start());$('restart').addEventListener('click',start);$('pause').addEventListener('click',pause);
+document.querySelectorAll('.mode').forEach(button=>button.addEventListener('click',()=>{if(['running','paused'].includes(phase))return;mode=button.dataset.mode;reset();}));
+const keyMap={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
+document.addEventListener('keydown',e=>{if($('rules').open||e.target.closest('button,a,input,select'))return;if(keyMap[e.code]){e.preventDefault();turn(vectors[keyMap[e.code]]);}else if(e.code==='Space'){e.preventDefault();if(!e.repeat)pause();}else if(e.code==='Enter'){e.preventDefault();if(!e.repeat)phase==='paused'?pause():start();}});
+document.querySelectorAll('[data-direction]').forEach(button=>button.addEventListener('pointerdown',e=>{e.preventDefault();turn(vectors[button.dataset.direction]);canvas.focus({preventScroll:true});}));
+let touch=null;
+canvas.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){touch={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);}});
+canvas.addEventListener('pointerup',e=>{if(!touch)return;const dx=e.clientX-touch.x,dy=e.clientY-touch.y;touch=null;if(Math.max(Math.abs(dx),Math.abs(dy))<12)return;turn(Math.abs(dx)>Math.abs(dy)?(dx>0?vectors.right:vectors.left):(dy>0?vectors.down:vectors.up));});
+canvas.addEventListener('pointercancel',()=>touch=null);
+function autoPause(){if(phase==='running')pause();}
+window.addEventListener('blur',autoPause);document.addEventListener('visibilitychange',()=>{if(document.hidden)autoPause();});
+$('rules-open').addEventListener('click',()=>{autoPause();$('rules').showModal();});$('rules-close').addEventListener('click',()=>$('rules').close());
+reset();requestAnimationFrame(frame);
+</script>
+</body>
+</html>
